@@ -1,0 +1,14 @@
+[Unit]
+Description=Caelestia desktop shell for Hyprland
+PartOf=graphical-session.target
+After=graphical-session.target
+StartLimitIntervalSec=30
+StartLimitBurst=3
+
+[Service]
+Environment=GDK_DPI_SCALE=0.8
+Type=exec
+ExecStart=/usr/bin/systemd-inhibit --what=handle-power-key --mode=block --who=Hyprland --why=Caelestia-session-menu /usr/bin/quickshell --config caelestia --no-duplicate
+Restart=on-failure
+RestartSec=2
+TimeoutStopSec=5

@@ -1,0 +1,7 @@
+{
+    "wallpaper_path": "$HOME/Pictures/Wallpapers/",
+    "cache_path": "$HOME/.cache/personal-wallpaper-picker/",
+    "number_of_pictures": 5,
+    "border_color": "#cdd6f4",
+    "cache_batch_size": 2
+}

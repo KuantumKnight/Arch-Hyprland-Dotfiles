@@ -1,0 +1,8 @@
+[Unit]
+Description=Update the selected wallpaper's lock-screen poster
+PartOf=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash %h/.config/viegphunt/wallpaper_effects.sh
+TimeoutStopSec=1

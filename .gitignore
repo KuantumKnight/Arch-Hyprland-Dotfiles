@@ -1,0 +1,5 @@
+.config/hypr/wallpaper
+__pycache__/
+*.py[cod]
+*.bak
+*.bak-*

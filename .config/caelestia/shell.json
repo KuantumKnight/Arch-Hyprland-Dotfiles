@@ -1,0 +1,96 @@
+{
+  "general": {
+    "apps": {
+      "terminal": [
+        "kitty"
+      ],
+      "audio": [
+        "pavucontrol"
+      ],
+      "playback": [
+        "vlc"
+      ],
+      "explorer": [
+        "nemo"
+      ]
+    },
+    "idle": {
+      "timeouts": []
+    }
+  },
+  "background": {
+    "enabled": false
+  },
+  "paths": {
+    "wallpaperDir": "$HOME/Pictures/Wallpapers"
+  },
+  "services": {
+    "smartScheme": false,
+    "weatherUnits": "Celsius",
+    "weatherLocation": ""
+  },
+  "utilities": {
+    "toasts": {
+      "configLoaded": false,
+      "chargingChanged": false,
+      "gameModeChanged": false,
+      "dndChanged": false,
+      "audioOutputChanged": false,
+      "audioInputChanged": false,
+      "capsLockChanged": false,
+      "numLockChanged": false,
+      "kbLayoutChanged": false,
+      "kbLimit": false,
+      "vpnChanged": false,
+      "nowPlaying": false
+    }
+  },
+  "bar": {
+    "statusIcons": [
+      {
+        "id": "lockStatus",
+        "enabled": true
+      },
+      {
+        "id": "audio",
+        "enabled": false
+      },
+      {
+        "id": "microphone",
+        "enabled": false
+      },
+      {
+        "id": "kbLayout",
+        "enabled": false
+      },
+      {
+        "id": "network",
+        "enabled": true
+      },
+      {
+        "id": "bluetooth",
+        "enabled": true
+      },
+      {
+        "id": "battery",
+        "enabled": true
+      },
+      {
+        "id": "awcc",
+        "enabled": false
+      }
+    ]
+  },
+  "appearance": {
+    "rounding": {
+      "scale": 1
+    }
+  },
+  "border": {
+    "rounding": 25,
+    "thickness": 0
+  },
+  "dashboard": {
+    "showOnHover": false
+  }
+}
