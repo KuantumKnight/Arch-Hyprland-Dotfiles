@@ -7,8 +7,9 @@ for my setup, so review the keybindings and settings before applying them.
 
 ## Video showcase
 
-[Watch the 42-second rice tour](media/showcase.mp4) — shell, hotkeys,
-wallpaper workflow, system details, and the installer.
+[![12-second preview: shell, hotkeys, wallpaper workflow, Fastfetch, and installer](media/showcase-preview.gif)](media/showcase.mp4)
+
+[Download the full 42-second tour (MP4)](media/showcase.mp4).
 
 ## What’s included
 
