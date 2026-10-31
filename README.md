@@ -5,6 +5,11 @@ Caelestia shell, and a still-image wallpaper picker with transition effects.
 It grew out of a mix of other rices and my own changes. The configs are tuned
 for my setup, so review the keybindings and settings before applying them.
 
+## Video showcase
+
+[Watch the 42-second rice tour](media/showcase.mp4) — shell, hotkeys,
+wallpaper workflow, system details, and the installer.
+
 ## What’s included
 
 - Hyprland Lua settings, bindings, window rules, and startup hooks
