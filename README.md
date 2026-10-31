@@ -7,9 +7,9 @@ for my setup, so review the keybindings and settings before applying them.
 
 ## Video showcase
 
-[![12-second preview: shell, hotkeys, wallpaper workflow, Fastfetch, and installer](media/showcase-preview.gif)](media/showcase.mp4)
+[![Live screen recording of the Hyprland desktop, Fastfetch, and btop](media/showcase-preview.gif)](media/showcase.mp4)
 
-[Download the full 42-second tour (MP4)](media/showcase.mp4).
+[Download the full 34-second screen recording (MP4)](media/showcase.mp4).
 
 ## What’s included
 
