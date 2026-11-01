@@ -7,9 +7,9 @@ for my setup, so review the keybindings and settings before applying them.
 
 ## Video showcase
 
-<https://github.com/user-attachments/assets/8731de09-182c-4056-8dc9-42b70bbf54e1>
+<https://github.com/user-attachments/assets/e31b668d-0e20-49e6-84f4-8d01ee88e3d0>
 
-[Download the full 34-second screen recording (MP4)](media/showcase.mp4).
+[Download the full 51-second screen recording (MP4)](media/showcase.mp4).
 
 ## What’s included
 
