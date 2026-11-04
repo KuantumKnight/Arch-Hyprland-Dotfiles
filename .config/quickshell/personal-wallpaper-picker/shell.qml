@@ -2,7 +2,6 @@
 import Quickshell
 import Quickshell.Io
 import QtQuick
-import QtQuick.Effects
 import Qt.labs.folderlistmodel
 import Quickshell.Wayland
 
@@ -11,13 +10,13 @@ PanelWindow {
     readonly property real ui: Screen.height / 1080
     readonly property real refWidth: 1920
     readonly property real refHeight: 500
-    property int speed: 1800
-    property int animDuration: 220
-    property real zoomScale: 0.8
-    property real edgeScale: 0.3
+    property int speed: 4200
+    property int animDuration: 240
+    property real zoomScale: 1.15
+    property real edgeScale: 0.86
     property real skewFactor: 0
     property real baseSpacing: 0
-    property real edgeSpacing: 80
+    property real edgeSpacing: 0
     property int startPosition: 0
     readonly property bool previewOnly: Quickshell.env("WALLPAPER_PICKER_PREVIEW") === "1"
     property bool shadowEnabled: true
@@ -80,7 +79,8 @@ PanelWindow {
         id: folderModel
         folder: "file://" + main.wallpaperPath
         showDirs: false
-        nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.webp", "*.bmp"]
+        nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.webp", "*.bmp", "*.gif", "*.mp4", "*.mkv", "*.webm", "*.mov"]
+        caseSensitive: false
         sortField: FolderListModel.Name
     }
 
@@ -119,7 +119,7 @@ PanelWindow {
         }
 
         Text {
-            text: "Add images to:"
+            text: "Add images or live wallpapers to:"
             color: "#aaaaaa"
             font.pixelSize: 13 * main.ui
             anchors.horizontalCenter: parent.horizontalCenter
@@ -140,7 +140,7 @@ PanelWindow {
     ListView {
         id: list
         width: parent.width
-        height: tileHeight
+        height: tileHeight * main.zoomScale
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         z: 1
@@ -149,13 +149,23 @@ PanelWindow {
         orientation: ListView.Horizontal
         spacing: 0
         clip: true
-        cacheBuffer: 400 * main.ui
+        cacheBuffer: tileWidth * 2
+        reuseItems: true
         boundsBehavior: Flickable.StopAtBounds
 
         property int selectedIndex: main.startPosition
+        // Follow selection even when scrolling reaches either end of the list.
+        property real magnifiedIndex: selectedIndex
+        Behavior on magnifiedIndex {
+            enabled: list.ready
+            NumberAnimation {
+                duration: main.animDuration
+                easing.type: Easing.OutCubic
+            }
+        }
 
-        readonly property real tileHeight: main.refHeight * main.ui
-        readonly property real tileWidth: (main.refWidth / Math.max(1, configs.number_of_pictures) - 10) * main.ui
+        readonly property real tileHeight: Math.min(340 * main.ui, main.height * 0.42)
+        readonly property real tileWidth: width / Math.max(1, configs.number_of_pictures)
 
         readonly property real viewportCenterX: width / 2
         readonly property real falloffRadius: (main.refWidth / 2) * main.ui
@@ -167,16 +177,16 @@ PanelWindow {
         property real lastMouseX: -1
         property real lastMouseY: -1
 
-        leftMargin: sideMargin
-        rightMargin: sideMargin
+        leftMargin: 0
+        rightMargin: 0
 
         function clampIndex(i) { return Math.max(0, Math.min(i, count - 1)) }
         // contentX that puts tile i exactly in the middle of the viewport.
         // Uses the real delegate position when it exists, else the margin-based formula.
         function centerX(i) {
             const it = itemAtIndex(i)
-            if (it) return it.x + tileWidth / 2 - width / 2
-            return i * step - sideMargin
+            const target = it ? it.x + tileWidth / 2 - width / 2 : i * step - sideMargin
+            return Math.max(0, Math.min(target, Math.max(0, contentWidth - width)))
         }
         function ensureVisibleAnimated(i) { contentX = centerX(i) }
 
@@ -203,7 +213,6 @@ PanelWindow {
         }
 
         function moveSelection(delta, speedMultiplier) {
-            anim.velocity = main.speed * speedMultiplier
             selectedIndex = clampIndex(selectedIndex + delta)
             ensureVisibleAnimated(selectedIndex)
         }
@@ -219,69 +228,53 @@ PanelWindow {
 
         Behavior on contentX {
             enabled: list.ready
-            SmoothedAnimation {
-                id: anim
-                velocity: main.speed
+            NumberAnimation {
                 duration: main.animDuration
-                reversingMode: SmoothedAnimation.Immediate
+                easing.type: Easing.OutCubic
             }
         }
 
         delegate: Item {
             id: delegateItem
             width: list.tileWidth
-            height: list.tileHeight
+            height: list.height
 
+            z: scaleFactor
             property bool active: index === list.selectedIndex
             readonly property bool isGif: fileName.toLowerCase().endsWith(".gif")
             readonly property bool isVideo: /\.(mp4|mkv|webm|mov)$/i.test(fileName)
             readonly property real baseWidth: list.tileWidth
             readonly property real baseCenterX: x - list.contentX + baseWidth / 2
-            readonly property real distance: Math.abs(baseCenterX - list.viewportCenterX)
-            readonly property real fraction: Math.min(1, distance / list.falloffRadius)
-            readonly property real compression: { const t = fraction; return t * t * t * t }
-            readonly property real edgeOffset: {
-                const amount = main.edgeSpacing * main.ui * compression
-                return baseCenterX < list.viewportCenterX ? amount : -amount
-            }
+            readonly property real distance: Math.abs(index - list.magnifiedIndex) * list.step
+            // Continuous easing keeps magnification fluid between card positions.
             readonly property real scaleFactor: {
-                const t = 1 - fraction * fraction * (3 - 2 * fraction)
-                return main.edgeScale + (main.zoomScale - main.edgeScale) * t
+                const d = Math.min(2, distance / list.step)
+                const t = d < 1 ? d : d - 1
+                const eased = t * t * (3 - 2 * t)
+                return d < 1 ? main.zoomScale + (0.88 - main.zoomScale) * eased
+                             : 0.88 + (0.74 - 0.88) * eased
             }
+            readonly property real edgeOffset: 0
+            // Selection also moves this focal point at the ends, where contentX stops.
+            readonly property real parallax: Math.max(-1, Math.min(1,
+                (index - list.magnifiedIndex) / 3))
 
             Item {
                 id: content
+                clip: true
                 anchors.verticalCenter: parent.verticalCenter
                 width: delegateItem.baseWidth * delegateItem.scaleFactor
-                height: delegateItem.height * Math.min(1, delegateItem.scaleFactor)
+                height: list.tileHeight * delegateItem.scaleFactor
                 x: (delegateItem.baseWidth - width) / 2 + delegateItem.edgeOffset
-                scale: cardMouse.pressed ? 0.98 : (cardMouse.containsMouse ? 1.045 : 1.0)
+                scale: 1.0
                 opacity: delegateItem.active || cardMouse.containsMouse ? 1.0 : 0.84
                 Behavior on scale { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
                 Behavior on opacity { NumberAnimation { duration: 120 } }
-                transform: Translate {
-                    y: cardMouse.containsMouse ? -8 * main.ui : 0
-                    Behavior on y { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
-                }
 
-                Image {
-                    id: shadowImage
-                    x: main.shadowX * main.ui
-                    y: main.shadowY * main.ui
-                    width: parent.width
-                    height: parent.height
-                    source: img.source
-                    sourceSize.width: img.sourceSize.width
-                    sourceSize.height: img.sourceSize.height
-                    fillMode: Image.PreserveAspectCrop
-                    asynchronous: true
-                    cache: false
-                    smooth: true
-                    visible: main.shadowEnabled
-                    opacity: main.shadowOpacity
-                    layer.enabled: true
-                    layer.effect: MultiEffect { brightness: -1; blurEnabled: true; blur: main.shadowBlur }
-                    transform: Shear { xFactor: main.skewFactor }
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: "#242432"
                 }
 
                 Text {
@@ -295,15 +288,21 @@ PanelWindow {
 
                 Image {
                     id: img
-                    anchors.fill: parent
-                    opacity: 0.95
+                    // Keep the landscape image behind the portrait viewport instead of
+                    // cropping away its sides before the pan can reveal them.
+                    width: Math.max(parent.width * 1.8,
+                        height * (implicitWidth > 0 && implicitHeight > 0 ? implicitWidth / implicitHeight : 1.78))
+                    height: parent.height * 1.04
+                    x: (parent.width - width) / 2 - delegateItem.parallax * (width - parent.width) / 2
+                    y: (parent.height - height) / 2
+                    opacity: 1
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
-                    cache: false
+                    cache: true
                     smooth: true
                     source: "file://" + main.cachePath + fileName + ".png"
-                    sourceSize.width: delegateItem.baseWidth * main.zoomScale
-                    sourceSize.height: delegateItem.height
+                    sourceSize.width: 960
+                    sourceSize.height: 600
                     transform: Shear { xFactor: main.skewFactor }
 
                     Timer {
@@ -314,26 +313,10 @@ PanelWindow {
                     }
 
                     onStatusChanged: {
-                        if (status === Image.Error) { alt.text = "Caching"; retryTimer.start() }
+                        if (status === Image.Error) { alt.text = "Preparing…"; retryTimer.start() }
+                        else if (status === Image.Ready) { alt.text = ""; retryTimer.stop() }
                     }
                 }
-                AnimatedImage {                        
-                    id: gifImage
-                    anchors.fill: parent
-                    z: 5
-                    // only load/play the real GIF for the selected tile
-                    source: (delegateItem.isGif && delegateItem.active)
-                    ? "file://" + filePath : ""
-                    visible: status === AnimatedImage.Ready
-                    playing: visible
-                    fillMode: Image.PreserveAspectCrop
-                    asynchronous: true
-                    cache: false
-                    smooth: true
-                    opacity: 0.95
-                    transform: Shear { xFactor: main.skewFactor }
-                }
-
                 Rectangle {
                     z: 11
                     anchors.top: parent.top
@@ -343,7 +326,7 @@ PanelWindow {
                     height: liveLabel.implicitHeight + 8 * main.ui
                     radius: 5 * main.ui
                     color: "#cc1e1e2e"
-                    visible: delegateItem.isVideo
+                    visible: delegateItem.isVideo || delegateItem.isGif
                     Text {
                         id: liveLabel
                         anchors.centerIn: parent

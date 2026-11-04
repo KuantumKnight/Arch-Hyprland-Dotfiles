@@ -1,0 +1,5 @@
+@theme "base.rasi"
+window { width: 1000px; }
+listview { columns: 1; lines: 12; spacing: 5px; }
+element { padding: 10px; }
+entry { placeholder: "Search actions or shortcuts…"; }

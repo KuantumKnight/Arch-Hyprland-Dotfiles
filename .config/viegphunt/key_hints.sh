@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 pkill -u "$UID" -x rofi || true
-cat <<'HINTS' | rofi -dmenu -i -p 'Keybindings' -mesg 'Super = Windows key · Escape to close' >/dev/null || true
+cat <<'HINTS' | rofi -no-config -theme "$HOME/.config/rofi/adi-menus/hints.rasi" -dmenu -i -no-custom -p 'Shortcuts'  >/dev/null || true
 Super + K         Terminal (Kitty)
 Super + E         File manager (Nemo)
 Super + M         Firefox
 Ctrl + Shift + Esc System monitor (btop)
-Alt + Space       App launcher
-Super + R         App launcher (Rofi)
 Super + A         Caelestia launcher
 Super + D         Caelestia dashboard
 Super + N         Caelestia sidebar

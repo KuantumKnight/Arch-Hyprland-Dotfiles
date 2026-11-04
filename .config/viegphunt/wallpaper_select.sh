@@ -10,5 +10,4 @@ except ValueError:
 '; then
     exec quickshell kill --path "$selector"
 fi
-"$selector/cache.sh" "$selector"
 exec env -u GDK_DPI_SCALE quickshell --no-duplicate --path "$selector"

@@ -1,0 +1,12 @@
+[Unit]
+Description=Selected live wallpaper
+PartOf=graphical-session.target hypr-wallpaper.service
+
+[Service]
+Type=exec
+ExecStart=%h/.config/viegphunt/live-wallpaper.sh
+Restart=on-failure
+RestartSec=3
+KillSignal=SIGKILL
+SuccessExitStatus=SIGKILL
+TimeoutStopSec=2

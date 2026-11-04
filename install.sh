@@ -13,12 +13,12 @@ pacman_packages=(
   rofi rofi-emoji wl-clipboard python libnotify
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
   adw-gtk-theme gtk3 gtk4 gsettings-desktop-schemas noto-fonts
-  ttf-jetbrains-mono-nerd
+  ttf-jetbrains-mono-nerd noto-fonts-emoji
 )
 aur_packages=(
   caelestia-cli caelestia-shell quickshell-git qt6-m3shapes-git
   python-materialyoucolor libcava ttf-rubik-vf
-  apple_cursor whitesur-icon-theme
+  apple_cursor whitesur-icon-theme mpvpaper
 )
 managed_paths=(
   .config/hypr
@@ -37,6 +37,7 @@ managed_units=(
   caelestia-shell.service
   hypr-wallpaper.service
   hypr-wallpaper-poster.service
+  hypr-live-wallpaper.service
 )
 
 usage() {

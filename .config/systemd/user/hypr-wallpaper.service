@@ -1,5 +1,5 @@
 [Unit]
-Description=Original rice still-image wallpaper
+Description=Wallpaper backend and selected image or video restoration
 PartOf=graphical-session.target
 After=graphical-session.target
 

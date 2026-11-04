@@ -50,3 +50,13 @@ for _, event in ipairs({
 end
 
 updateSingleWindowBorder()
+
+-- Spotify glass: show windows and wallpaper underneath without replacing its theme.
+hl.window_rule({
+    name = "spotify-glass-transparency",
+    match = { class = "^[Ss]potify$" },
+    opacity = "0.78 override 0.78 override 0.78 override",
+    no_blur = false,
+    opaque = false,
+    xray = false,
+})

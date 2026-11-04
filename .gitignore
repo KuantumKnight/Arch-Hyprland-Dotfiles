@@ -3,3 +3,7 @@ __pycache__/
 *.py[cod]
 *.bak
 *.bak-*
+
+# Local experiments and rollback copies
+*.before-*
+*.backup-*
