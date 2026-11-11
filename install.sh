@@ -5,7 +5,7 @@ repo_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 backup_root="$HOME/.local/state/arch-hyprland-dotfiles/backups/$(date +%Y%m%d-%H%M%S)-$$"
 
 pacman_packages=(
-  base-devel git hyprlock
+  base-devel git hyprlock bash bash-completion starship fastfetch
   awww brightnessctl bluez bluez-utils blueman cliphist
   btop firefox ffmpeg flameshot imagemagick kitty nemo network-manager
   network-manager-applet
@@ -21,6 +21,10 @@ aur_packages=(
   apple_cursor whitesur-icon-theme mpvpaper
 )
 managed_paths=(
+  .bashrc
+  .config/starship.toml
+  .config/starship-home.toml
+  .config/fastfetch
   .config/hypr
   .config/caelestia
   .config/cava
@@ -133,6 +137,7 @@ done
 mkdir -p "$HOME/.config" "$HOME/.config/systemd/user" \
   "$HOME/.config/hypr" "$HOME/Pictures/Wallpapers" "$HOME/.local/bin"
 cp -a "$repo_dir/.config/." "$HOME/.config/"
+cp -a "$repo_dir/.bashrc" "$HOME/.bashrc"
 for unit in "${managed_units[@]}"; do
   cp -a "$repo_dir/.config/systemd/user/$unit" "$HOME/.config/systemd/user/"
 done

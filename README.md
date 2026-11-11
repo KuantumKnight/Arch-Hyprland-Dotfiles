@@ -16,6 +16,7 @@ for my setup, so review the keybindings and settings before applying them.
 - Hyprland Lua settings, bindings, window rules, and startup hooks
 - Customized Caelestia shell and settings
 - Kitty, GTK, and CAVA configuration
+- Bash with Starship prompt and a Fastfetch startup image
 - Matching adi1090x-style emoji, clipboard, and searchable shortcut menus
 - Nine-card wallpaper carousel with smooth selection magnification and strong image parallax
 - Background thumbnail caching and muted, looping live wallpaper playback
@@ -51,6 +52,20 @@ moved under `~/.local/state/arch-hyprland-dotfiles/backups/` first.
 After installation, log out and start Hyprland again. The bundled images are
 available in `~/Pictures/Wallpapers`; add your own images or videos there and choose one
 with **Super+W**.
+
+## Shell and prompt
+
+Kitty launches Bash with the bundled `.bashrc` and Starship prompt. The installer
+installs Bash, bash-completion, Starship, and Fastfetch, and backs up any existing
+`.bashrc`, Starship configs, and Fastfetch directory before replacing them.
+Your account's login shell is unchanged.
+
+The prompt uses Starship defaults outside your home directory. At home it shows
+`user@host` and hides the Python module. Fastfetch shows the bundled character
+image in the first Kitty window when only one Kitty instance is running.
+Customize `.config/starship.toml`, `.config/starship-home.toml`, and
+`.config/fastfetch/config.jsonc` to change the appearance. The Fastfetch image is
+bundled separately from the MIT-licensed configuration files.
 
 ## Wallpaper carousel
 
