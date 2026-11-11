@@ -39,6 +39,13 @@ managed_units=(
   hypr-wallpaper-poster.service
   hypr-live-wallpaper.service
 )
+wallpapers=(
+  wallhaven-jeljgy.jpg
+  wallhaven-pomm99.jpg
+  wallhaven-qrp87d.jpg
+  wallhaven-rqddem.jpg
+  wallhaven-rr2j87.jpg
+)
 
 usage() {
   cat <<'USAGE'
@@ -131,6 +138,16 @@ for unit in "${managed_units[@]}"; do
 done
 cp -a "$repo_dir/.local/bin/awcc-launch" "$HOME/.local/bin/awcc-launch"
 chmod +x "$HOME/.local/bin/awcc-launch"
+for wallpaper in "${wallpapers[@]}"; do
+  source_path="$repo_dir/wallpapers/$wallpaper"
+  destination_path="$HOME/Pictures/Wallpapers/$wallpaper"
+  if [[ -e "$destination_path" || -L "$destination_path" ]]; then
+    printf 'Kept existing wallpaper %s\n' "$destination_path"
+  else
+    cp -n -- "$source_path" "$destination_path"
+    printf 'Installed wallpaper %s\n' "$destination_path"
+  fi
+done
 find "$HOME/.config/viegphunt" "$HOME/.config/quickshell/personal-wallpaper-picker" \
   -maxdepth 1 -type f -name '*.sh' -exec chmod +x {} +
 [[ -e "$HOME/.config/hypr/wallpaper" ]] || : > "$HOME/.config/hypr/wallpaper"
