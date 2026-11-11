@@ -7,9 +7,9 @@ for my setup, so review the keybindings and settings before applying them.
 
 ## Video showcase
 
-<https://github.com/user-attachments/assets/e31b668d-0e20-49e6-84f4-8d01ee88e3d0>
+<video src="https://github.com/KuantumKnight/Arch-Hyprland-Dotfiles/releases/download/v1.0.0/showcase.mp4" controls playsinline width="100%"></video>
 
-[Download the full 51-second screen recording (MP4)](media/showcase.mp4).
+[Download the full live screen recording (MP4)](media/showcase.mp4) or [get it from the v1.0.0 release](https://github.com/KuantumKnight/Arch-Hyprland-Dotfiles/releases/download/v1.0.0/showcase.mp4).
 
 ## What’s included
 
@@ -22,9 +22,12 @@ for my setup, so review the keybindings and settings before applying them.
 - Small launcher and desktop helper scripts
 - Spotify window transparency through a Hyprland rule
 
-The wallpaper collection itself is not bundled. Place your own images or videos in
-`~/Pictures/Wallpapers`. The AWCC integration is optional and disabled by
-default; it requires a separate Alienware GUI installation.
+Five sample wallpapers are included and copied to `~/Pictures/Wallpapers`
+when their filenames are not already present. See [WALLPAPERS.md](WALLPAPERS.md)
+for their Wallhaven source links and third-party attribution notes. You can
+add more images or videos to that directory at any time. The AWCC integration is
+optional and disabled by default; it requires a separate Alienware GUI
+installation.
 
 ## Install
 
@@ -45,8 +48,9 @@ If `yay` is missing, it builds it from the AUR after installing `base-devel`.
 Review AUR build prompts before accepting them. Existing managed files are
 moved under `~/.local/state/arch-hyprland-dotfiles/backups/` first.
 
-After installation, log out and start Hyprland again. Add wallpaper images or videos to
-`~/Pictures/Wallpapers`; choose one with **Super+W**.
+After installation, log out and start Hyprland again. The bundled images are
+available in `~/Pictures/Wallpapers`; add your own images or videos there and choose one
+with **Super+W**.
 
 ## Wallpaper carousel
 
@@ -83,6 +87,8 @@ Some shell files are derived from Caelestia and retain their upstream GPL-3.0
 license. The wallpaper picker and other folders may carry their own licenses;
 see the license files alongside those components. My original configuration files and
 scripts are MIT licensed; the adapted adi1090x menu themes retain GPL-3.0.
+The third-party wallpaper images have separate source and attribution notes in
+[WALLPAPERS.md](WALLPAPERS.md) and are not covered by the repository's MIT license.
 
 ## Credits
 
