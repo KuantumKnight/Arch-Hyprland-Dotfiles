@@ -1,7 +1,7 @@
-import socket,json,time
+import socket,json,time,os
 class Client:
  def __init__(self):
-  self.s=socket.create_connection(('127.0.0.1',2828),10); self.s.settimeout(35); self.i=0; self.recv();self.cmd('WebDriver:NewSession',{'capabilities':{}})
+  self.s=socket.create_connection(('127.0.0.1',int(os.environ.get('FIREFOX_MARIONETTE_PORT','2828'))),10); self.s.settimeout(35); self.i=0; self.recv();self.cmd('WebDriver:NewSession',{'capabilities':{}})
  def recv(self):
   n=b''
   while True:

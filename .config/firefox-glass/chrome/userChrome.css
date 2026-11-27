@@ -78,7 +78,7 @@
     --toolbar-field-color: #f1f3f7 !important;
     --toolbar-field-focus-color: #fff !important;
     --toolbar-field-focus-background-color: rgba(30,33,40,.94) !important;
-    --chrome-content-separator-color: rgba(255,255,255,.10) !important;
+    --chrome-content-separator-color: transparent !important;
     background: transparent !important;
   }
   #main-window, #browser, #appcontent, #tabbrowser-tabbox,
@@ -88,8 +88,8 @@
   #navigator-toolbox {
     background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.025) 38%, rgba(10,12,18,.20)), var(--glass-fill) !important;
     background-image: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.025) 38%, rgba(10,12,18,.20)) !important;
-    border-bottom: 1px solid var(--glass-line) !important;
-    box-shadow: inset 0 1px rgba(255,255,255,.16), 0 5px 22px rgba(0,0,0,.12) !important;
+    border-bottom: 0 !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.16) !important;
   }
   #TabsToolbar, #nav-bar, #PersonalToolbar, #titlebar {
     background: transparent !important;
@@ -150,10 +150,24 @@
 
 /* BEGIN KNIGHT TRANSPARENT CONTENT SURFACE */
 @-moz-document url("chrome://browser/content/browser.xhtml") {
-  :root body, #browser, #appcontent, #tabbrowser-tabbox,
+  :root {
+    appearance: none !important;
+    --content-backstop: transparent !important;
+  }
+
+  :root, body, #browser, #appcontent, #tabbrowser-tabbox,
   #tabbrowser-tabpanels, .browserContainer, .browserStack,
   browser[type="content"] {
-    background-color: transparent !important;
+    background: transparent !important;
   }
 }
 /* END KNIGHT TRANSPARENT CONTENT SURFACE */
+
+/* BEGIN KNIGHT SEAMLESS CONTENT EDGE */
+@-moz-document url("chrome://browser/content/browser.xhtml") {
+  .browserContainer {
+    border-top: 0 !important;
+    border-block-start: 0 !important;
+  }
+}
+/* END KNIGHT SEAMLESS CONTENT EDGE */

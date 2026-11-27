@@ -21,7 +21,7 @@ for my setup, so review the keybindings and settings before applying them.
 - Nine-card wallpaper carousel with smooth selection magnification and strong image parallax
 - Background thumbnail caching and muted, looping live wallpaper playback
 - Small launcher and desktop helper scripts
-- Firefox liquid-glass browser CSS, transparent Tabliss/new-tab pages, and optional Dark Reader-compatible website glass
+- Firefox Tinted Glass browser CSS, transparent Tabliss/new-tab pages, and optional Dark Reader-compatible website glass (v5.3)
 - Fluent dark Nemo theme with a process-scoped icon module and glass window rules
 - Spotify glass extension, Spicetify-aware launcher, and Super+S shortcut
 - Wallpaper carousel startup/edge-centering fixes and a 2% brightness floor
@@ -84,8 +84,11 @@ Restart Firefox to apply. Tabliss is optional; its extension UUID is resolved
 from the selected profile. Browser chrome/new-tab glass works independently
 of the optional uBlock script used for website backgrounds.
 
-The website script preserves Dark Reader's colors and adjusts eligible neutral
-background opacity. YouTube and ChatGPT are excluded. See
+Website glass v5.3 uses a black canvas starting at 88% opacity, with stronger
+backing when needed for text contrast. Light pages remain clear with no white
+tint. It supports modern CSS colors, preserves controls and distinct panels,
+and excludes YouTube and ChatGPT. The browser-wide content-edge line is removed.
+Dark Reader remains a separate optional add-on. See
 [Firefox glass notes](.config/firefox-glass/README.md) for the advanced installer.
 
 ### Nemo and Spotify

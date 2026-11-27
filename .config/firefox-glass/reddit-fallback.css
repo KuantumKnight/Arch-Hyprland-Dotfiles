@@ -1,0 +1,7 @@
+/* BEGIN KNIGHT REDDIT GLASS FALLBACK */
+/* Reddit is trusted in uBlock: keep that setting and style only its canvas. */
+@-moz-document domain("reddit.com") {
+  html.theme-dark { background-color: rgba(0, 0, 0, .96) !important; }
+  html.theme-light { background-color: transparent !important; }
+}
+/* END KNIGHT REDDIT GLASS FALLBACK */

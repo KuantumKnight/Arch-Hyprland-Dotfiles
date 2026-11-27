@@ -2,11 +2,11 @@
 import pathlib,json,re,time,base64,hashlib
 from marionette import Client
 root=pathlib.Path(__file__).parent
-c=Client();previous=c.cmd('WebDriver:GetWindowHandle')
+c=Client();previous=c.cmd('WebDriver:GetWindowHandle')['value']
 c.cmd('Marionette:SetContext',{'value':'chrome'})
 c.script("if(window.knightInstall){let s=window.knightInstall;gBrowser.removeTab(s.tab);if(s.previous.isConnected)gBrowser.selectedTab=s.previous;delete window.knightInstall;}")
 c.cmd('Marionette:SetContext',{'value':'content'})
-previous=c.cmd('WebDriver:GetWindowHandles')[0];c.cmd('WebDriver:SwitchToWindow',{'handle':previous})
+c.cmd('WebDriver:SwitchToWindow',{'handle':previous})
 handle=c.cmd('WebDriver:NewWindow',{'type':'tab'})['handle'];c.cmd('WebDriver:SwitchToWindow',{'handle':handle})
 c.cmd('Marionette:SetContext',{'value':'chrome'})
 # Find uBlock's current UUID rather than assuming its profile-specific address.
