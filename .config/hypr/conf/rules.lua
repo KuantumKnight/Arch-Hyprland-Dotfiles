@@ -55,7 +55,17 @@ updateSingleWindowBorder()
 hl.window_rule({
     name = "spotify-glass-transparency",
     match = { class = "^[Ss]potify$" },
-    opacity = "0.78 override 0.78 override 0.78 override",
+    opacity = "0.65 override 0.65 override 0.65 override",
+    no_blur = false,
+    opaque = false,
+    xray = false,
+})
+
+-- Nemo glass: translucent file manager using the existing compositor blur.
+hl.window_rule({
+    name = "nemo-glass-transparency",
+    match = { class = "^[Nn]emo$" },
+    opacity = "0.65 override 0.65 override 0.65 override",
     no_blur = false,
     opaque = false,
     xray = false,

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Fluent styling and icons are scoped to this file-manager process.
+exec env GTK_THEME=Fluent-Nemo-Dark /usr/bin/nemo --gtk-module="$HOME/.local/lib/nemo-fluent/icons.so" "$@"

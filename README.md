@@ -21,7 +21,13 @@ for my setup, so review the keybindings and settings before applying them.
 - Nine-card wallpaper carousel with smooth selection magnification and strong image parallax
 - Background thumbnail caching and muted, looping live wallpaper playback
 - Small launcher and desktop helper scripts
-- Spotify window transparency through a Hyprland rule
+- Firefox liquid-glass browser CSS, transparent Tabliss/new-tab pages, and optional Dark Reader-compatible website glass
+- Fluent dark Nemo theme with a process-scoped icon module and glass window rules
+- Spotify glass extension, Spicetify-aware launcher, and Super+S shortcut
+- Wallpaper carousel startup/edge-centering fixes and a 2% brightness floor
+- Clean Hyprland logout helper and an updated optional AWCC launcher
+- Ghostty Catppuccin Mocha, btop, and font rendering configs
+- Optional Dragon Quickshell dock for KDE Plasma and laptop refresh-rate policy
 
 Five sample wallpapers are included and copied to `~/Pictures/Wallpapers`
 when their filenames are not already present. See [WALLPAPERS.md](WALLPAPERS.md)
@@ -52,6 +58,73 @@ moved under `~/.local/state/arch-hyprland-dotfiles/backups/` first.
 After installation, log out and start Hyprland again. The bundled images are
 available in `~/Pictures/Wallpapers`; add your own images or videos there and choose one
 with **Super+W**.
+
+## Latest glass rice
+
+The installer bundles the latest visual configs and builds the Nemo GTK icon
+module from source. Existing managed files, including the new theme and helper
+paths, are backed up. Your live browser profile is configured separately below.
+The portable defaults keep automatic monitor selection and AWCC disabled.
+Personal browser data, Spotify account data, caches and compiled local binaries
+are not bundled.
+
+### Firefox
+
+Open `about:profiles`, find the **Root Directory** of the profile you use, and
+close Firefox. After running the main installer, apply the bundled CSS:
+
+```bash
+python ~/.config/firefox-glass/apply-profile.py /path/to/firefox/profile
+```
+
+This installs `userChrome.css`, `userContent.css`, and a managed preference block
+in `user.js`. Existing CSS and `user.js` are saved under
+`~/.local/state/firefox-glass/profile-*`; unrelated preferences are preserved.
+Restart Firefox to apply. Tabliss is optional; its extension UUID is resolved
+from the selected profile. Browser chrome/new-tab glass works independently
+of the optional uBlock script used for website backgrounds.
+
+The website script preserves Dark Reader's colors and adjusts eligible neutral
+background opacity. YouTube and ChatGPT are excluded. See
+[Firefox glass notes](.config/firefox-glass/README.md) for the advanced installer.
+
+### Nemo and Spotify
+
+Super+E opens Nemo with the bundled `Fluent-Nemo-Dark` theme. The GTK module
+requests the optional `Fluent-dark` icon theme for Nemo alone; install those
+icons separately for the matching appearance. The theme's upstream source and
+GPL license are retained alongside its files.
+
+Super+S runs `spotify-spicetify`. This optional integration expects
+`spotify-launcher`, Spicetify at `~/.spicetify/spicetify`, and Spicetify Marketplace
+with its **Glassy** theme already selected. The installer provides the custom
+extension but does not install or configure Spotify/Marketplace. Add
+`glassy-transparent-backdrop.js` to your Spicetify extensions while keeping any
+other extension entries, then run `spicetify apply`. The launcher checks the
+patch, repairs it when needed, and launches with automatic client updates
+skipped. Spotify and Nemo use 65% window opacity; Kitty also uses 65% and
+supports dynamic opacity changes.
+
+### Optional dock and laptop policy
+
+The Dragon dock is included as an extra for **KDE Plasma**, with KDE task-manager,
+ScreenBrightness, KWin and notification integrations. It is not started by the
+Hyprland installer. In an existing Plasma session with Quickshell, Python
+`dbus` (`python-dbus` on Arch), NetworkManager and PipeWire tools installed, run:
+
+```bash
+quickshell -c dragon
+```
+
+Pins and ordering live in `.config/quickshell/dragon/dock-layout.json`. Some pins
+refer to apps from my desktop; customize them for your installed applications.
+Ghostty is also optional; its config is copied without installing the terminal.
+
+`knight-screen-power.service` is copied but **not enabled**. Its script targets
+my `eDP-1`, 2560×1600 laptop panel: 60 Hz on battery, 240 Hz on AC. Review and
+adapt `~/.local/lib/rice/screen-policy.py` to supported monitor modes before
+starting it. On matching hardware, enable it explicitly with
+`systemctl --user enable --now knight-screen-power.service`.
 
 ## Shell and prompt
 
@@ -89,7 +162,7 @@ Their themes are adapted from adi1090x Type-2 Style-2; they add no background se
 | --- | --- |
 | Super+H | Show key hints |
 | Super+K / Super+E | Kitty / Nemo |
-| Super+M | Firefox |
+| Super+M / Super+S | Firefox / Spotify (optional Spicetify setup) |
 | Super+A / D / N / X | Caelestia launcher / dashboard / sidebar / session menu |
 | Alt+Space / Super+R | Unassigned; use Super+A for apps |
 | Super+W / Super+Shift+W | Choose / randomize wallpaper |
@@ -106,5 +179,7 @@ The third-party wallpaper images have separate source and attribution notes in
 [WALLPAPERS.md](WALLPAPERS.md) and are not covered by the repository's MIT license.
 
 ## Credits
+
+The bundled Nemo theme comes from [vinceliuice’s Fluent GTK theme](https://github.com/vinceliuice/Fluent-gtk-theme); its revision and GPL license are retained in `.local/share/themes/Fluent-Nemo-Dark`.
 
 This rice builds on [adi1090x’s Rofi themes](https://github.com/adi1090x/rofi), configuration adapted from [ViegPhunt](https://github.com/ViegPhunt/Arch-Hyprland), and ideas and configuration from [Caelestia Shell](https://github.com/caelestia-dots/shell), [43PR’s wallpaper picker](https://github.com/43PR/dotfiles/tree/main/.config/quickshell/hyprquickpaper), [JaKooLit Hyprland Dots](https://github.com/JaKooLit/Hyprland-Dots), [HyDE](https://github.com/Hyde-project/hyde), and [ML4W Dotfiles](https://github.com/mylinuxforwork/dotfiles), along with ideas from the r/unixporn community. See the component license files for terms and further credits.

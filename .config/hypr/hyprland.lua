@@ -6,3 +6,5 @@ require("conf.animations")
 require("conf.rules")
 require("conf.bindings")
 require("conf.autostart")
+
+require("conf.firefox_glass")

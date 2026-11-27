@@ -29,3 +29,8 @@ if command -v starship >/dev/null 2>&1; then
     _starship_choose_config
     eval "$(starship init bash)"
 fi
+
+# Optional Node Version Manager installation.
+export NVM_DIR="$HOME/.nvm"
+[[ ! -s "$NVM_DIR/nvm.sh" ]] || source "$NVM_DIR/nvm.sh"
+[[ ! -s "$NVM_DIR/bash_completion" ]] || source "$NVM_DIR/bash_completion"

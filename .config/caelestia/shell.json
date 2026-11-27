@@ -11,7 +11,7 @@
         "vlc"
       ],
       "explorer": [
-        "nemo"
+        "nemo-fluent"
       ]
     },
     "idle": {
@@ -92,5 +92,12 @@
   },
   "dashboard": {
     "showOnHover": false
+  },
+  "session": {
+    "commands": {
+      "logout": [
+        "hyprland-logout"
+      ]
+    }
   }
 }

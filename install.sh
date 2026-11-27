@@ -34,6 +34,18 @@ managed_paths=(
   .config/quickshell/caelestia
   .config/quickshell/personal-wallpaper-picker
   .config/rofi
+  .config/firefox-glass
+  .config/btop
+  .config/ghostty
+  .config/fontconfig
+  .config/quickshell/dragon
+  .config/spicetify/Extensions/glassy-transparent-backdrop.js
+  .local/lib/nemo-fluent
+  .local/lib/rice
+  .local/share/themes/Fluent-Nemo-Dark
+  .local/bin/nemo-fluent
+  .local/bin/spotify-spicetify
+  .local/bin/hyprland-logout
   .config/viegphunt
   .local/bin/awcc-launch
 )
@@ -42,6 +54,7 @@ managed_units=(
   hypr-wallpaper.service
   hypr-wallpaper-poster.service
   hypr-live-wallpaper.service
+  knight-screen-power.service
 )
 wallpapers=(
   wallhaven-jeljgy.jpg
@@ -141,8 +154,15 @@ cp -a "$repo_dir/.bashrc" "$HOME/.bashrc"
 for unit in "${managed_units[@]}"; do
   cp -a "$repo_dir/.config/systemd/user/$unit" "$HOME/.config/systemd/user/"
 done
-cp -a "$repo_dir/.local/bin/awcc-launch" "$HOME/.local/bin/awcc-launch"
-chmod +x "$HOME/.local/bin/awcc-launch"
+mkdir -p "$HOME/.local/lib" "$HOME/.local/share/themes"
+cp -a "$repo_dir/.local/bin/." "$HOME/.local/bin/"
+cp -a "$repo_dir/.local/lib/." "$HOME/.local/lib/"
+cp -a "$repo_dir/.local/share/themes/Fluent-Nemo-Dark" "$HOME/.local/share/themes/"
+chmod +x "$HOME/.local/bin/awcc-launch" "$HOME/.local/bin/nemo-fluent" \
+  "$HOME/.local/bin/spotify-spicetify" "$HOME/.local/bin/hyprland-logout"
+cc -shared -fPIC $(pkg-config --cflags gtk+-3.0) \
+  "$HOME/.local/lib/nemo-fluent/icons.c" \
+  -o "$HOME/.local/lib/nemo-fluent/icons.so" $(pkg-config --libs gtk+-3.0)
 for wallpaper in "${wallpapers[@]}"; do
   source_path="$repo_dir/wallpapers/$wallpaper"
   destination_path="$HOME/Pictures/Wallpapers/$wallpaper"
@@ -160,3 +180,4 @@ systemctl --user daemon-reload
 
 printf '\nInstalled. Backup: %s\n' "$backup_root"
 printf 'Log out and start Hyprland again to apply the rice.\n'
+printf 'See README.md for Firefox profile setup and optional Spotify, dock and screen policy.\n'

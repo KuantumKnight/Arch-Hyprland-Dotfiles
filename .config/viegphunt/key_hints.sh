@@ -5,6 +5,7 @@ cat <<'HINTS' | rofi -no-config -theme "$HOME/.config/rofi/adi-menus/hints.rasi"
 Super + K         Terminal (Kitty)
 Super + E         File manager (Nemo)
 Super + M         Firefox
+Super + S         Spotify (Spicetify)
 Ctrl + Shift + Esc System monitor (btop)
 Super + A         Caelestia launcher
 Super + D         Caelestia dashboard

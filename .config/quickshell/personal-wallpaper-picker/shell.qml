@@ -54,6 +54,18 @@ PanelWindow {
 
     Component.onCompleted: Quickshell.execDetached(["bash", Quickshell.shellPath("cache.sh"), Quickshell.shellDir])
 
+    IpcHandler {
+        target: "picker"
+        function state(): string {
+            const item = list.itemAtIndex(list.selectedIndex)
+            return JSON.stringify({ ready: list.ready, userMoved: list.userMoved,
+                selected: list.selectedIndex, count: list.count,
+                selectedPath: list.count > 0 ? folderModel.get(list.selectedIndex, "filePath") : "",
+                center: item ? item.x + list.tileWidth / 2 - list.contentX : -1,
+                viewportCenter: list.width / 2 })
+        }
+    }
+
     FileView {
         path: Quickshell.shellPath("config.json")
         watchChanges: true
@@ -90,6 +102,7 @@ PanelWindow {
         z: 0
         onClicked: Qt.quit()
         onWheel: function(wheel) {
+            if (!list.hoverArmed) { wheel.accepted = true; return }
             list.userMoved = true
             const delta = wheel.angleDelta.y || wheel.angleDelta.x
             if (delta !== 0) list.moveSelection(delta > 0 ? -1 : 1, 1)
@@ -174,11 +187,34 @@ PanelWindow {
         readonly property real sideMargin: Math.max(0, viewportCenterX - tileWidth / 2)
         property bool ready: false
         property bool userMoved: false
+        property bool hoverArmed: false
         property real lastMouseX: -1
         property real lastMouseY: -1
 
-        leftMargin: 0
-        rightMargin: 0
+        // Allow the first and last wallpapers to sit in the center too.
+        leftMargin: sideMargin
+        rightMargin: sideMargin
+
+        // Track physical pointer movement in scene coordinates. Delegate layout
+        // and magnification must not masquerade as mouse movement at startup.
+        HoverHandler {
+            id: carouselHover
+            onPointChanged: {
+                const p = point.scenePosition
+                const first = list.lastMouseX < 0 || list.lastMouseY < 0
+                const moved = !first && (Math.abs(p.x - list.lastMouseX) > 1
+                    || Math.abs(p.y - list.lastMouseY) > 1)
+                list.lastMouseX = p.x
+                list.lastMouseY = p.y
+                if (!list.ready || !list.hoverArmed || !moved) return
+                const index = list.indexAt(point.position.x + list.contentX,
+                    point.position.y + list.contentY)
+                if (index >= 0) {
+                    list.userMoved = true
+                    list.selectedIndex = index
+                }
+            }
+        }
 
         function clampIndex(i) { return Math.max(0, Math.min(i, count - 1)) }
         // contentX that puts tile i exactly in the middle of the viewport.
@@ -186,12 +222,22 @@ PanelWindow {
         function centerX(i) {
             const it = itemAtIndex(i)
             const target = it ? it.x + tileWidth / 2 - width / 2 : i * step - sideMargin
-            return Math.max(0, Math.min(target, Math.max(0, contentWidth - width)))
+            return Math.max(originX - leftMargin,
+                Math.min(target, Math.max(originX - leftMargin,
+                    originX + contentWidth - width + rightMargin)))
         }
         function ensureVisibleAnimated(i) { contentX = centerX(i) }
 
+        function scheduleStart() {
+            if (!userMoved) {
+                ready = false
+                startupSelection.restart()
+            }
+        }
+
         function centerOnStart() {
             if (userMoved || count <= 0 || configs.number_of_pictures <= 0) return
+            forceLayout()
             let desired = main.startPosition
             const current = currentWallpaper.text().trim()
             for (let i = 0; i < count; i++) {
@@ -200,6 +246,7 @@ PanelWindow {
             selectedIndex = clampIndex(desired)
             contentX = centerX(selectedIndex)
             ready = true
+            startupHover.restart()
         }
 
         function activateCurrent() {
@@ -217,13 +264,29 @@ PanelWindow {
             ensureVisibleAnimated(selectedIndex)
         }
 
-        onCountChanged: centerOnStart()
-        onWidthChanged: centerOnStart()
-        onTileWidthChanged: centerOnStart()
+        Timer {
+            id: startupHover
+            interval: 350
+            onTriggered: {
+                list.lastMouseX = carouselHover.point.scenePosition.x
+                list.lastMouseY = carouselHover.point.scenePosition.y
+                list.hoverArmed = true
+            }
+        }
+
+        Timer {
+            id: startupSelection
+            interval: 40
+            onTriggered: list.centerOnStart()
+        }
+
+        onCountChanged: scheduleStart()
+        onWidthChanged: scheduleStart()
+        onTileWidthChanged: scheduleStart()
 
         Connections {
             target: configs
-            function onNumber_of_picturesChanged() { list.centerOnStart() }
+            function onNumber_of_picturesChanged() { list.scheduleStart() }
         }
 
         Behavior on contentX {
@@ -343,20 +406,14 @@ PanelWindow {
                 anchors.fill: parent
                 hoverEnabled: list.ready
                 cursorShape: Qt.PointingHandCursor
-                onPositionChanged: function(mouse) {
-                    const p = mapToItem(null, mouse.x, mouse.y)
-                    if (p.x === list.lastMouseX && p.y === list.lastMouseY) return
-                    list.lastMouseX = p.x
-                    list.lastMouseY = p.y
-                    list.userMoved = true
-                    list.selectedIndex = index
-                }
                 onClicked: {
+                    if (!list.hoverArmed) return
                     list.userMoved = true
                     list.selectedIndex = index
                     list.activateCurrent()
                 }
                 onWheel: function(wheel) {
+                    if (!list.hoverArmed) { wheel.accepted = true; return }
                     list.userMoved = true
                     const delta = wheel.angleDelta.y || wheel.angleDelta.x
                     if (delta !== 0) list.moveSelection(delta > 0 ? -1 : 1, 1)

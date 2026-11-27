@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "pins": [
+    "firefox",
+    "kitty",
+    "thunar",
+    "chatgpt"
+  ],
+  "order": [
+    "systemsettings",
+    "firefox",
+    "kitty",
+    "thunar",
+    "chatgpt"
+  ],
+  "autoHide": false
+}

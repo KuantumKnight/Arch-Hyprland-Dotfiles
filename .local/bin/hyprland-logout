@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""Stop this Hyprland desktop cleanly, outside the shell service's cgroup."""
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE", "")
+if not signature:
+    raise SystemExit("No active Hyprland session; refusing to log out.")
+if sys.argv[1:] == ["--execute"]:
+    # Confirm the socket is reachable before stopping desktop services.
+    subprocess.run(["hyprctl", "-j", "monitors"], check=True, stdout=subprocess.DEVNULL)
+    subprocess.run(["systemctl", "--user", "stop", "caelestia-shell.service",
+                    "hypr-live-wallpaper.service", "hypr-wallpaper-poster.service",
+                    "hypr-wallpaper.service"], check=True)
+    subprocess.run(["hyprctl", "dispatch", "hl.dsp.exit()"], check=True)
+elif not sys.argv[1:]:
+    # A transient unit survives stopping the Caelestia service which launched us.
+    subprocess.run(["systemd-run", "--user", "--collect", "--quiet",
+                    "--unit=knight-hyprland-logout", "--property=Type=exec",
+                    "--setenv=HYPRLAND_INSTANCE_SIGNATURE=" + signature,
+                    sys.executable, str(Path(__file__).resolve()), "--execute"], check=True)
+else:
+    raise SystemExit("Usage: hyprland-logout")

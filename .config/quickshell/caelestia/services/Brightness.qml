@@ -197,7 +197,8 @@ Singleton {
         }
 
         function setBrightness(value: real): void {
-            value = Math.max(0, Math.min(1, value));
+            // Keep the display usable even when brightness is lowered repeatedly.
+            value = Math.max(0.02, Math.min(1, value));
             const rounded = Math.round(value * 100);
             if (Math.round(brightness * 100) === rounded)
                 return;

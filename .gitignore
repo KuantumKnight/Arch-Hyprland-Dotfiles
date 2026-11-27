@@ -7,3 +7,6 @@ __pycache__/
 # Local experiments and rollback copies
 *.before-*
 *.backup-*
+
+# Locally compiled Nemo GTK module
+.local/lib/nemo-fluent/*.so

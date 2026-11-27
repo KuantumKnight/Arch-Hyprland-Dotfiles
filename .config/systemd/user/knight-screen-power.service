@@ -1,0 +1,10 @@
+[Unit]
+Description=60 Hz on battery and 240 Hz on AC for the laptop screen
+
+[Service]
+ExecStart=/usr/bin/python3 %h/.local/lib/rice/screen-policy.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

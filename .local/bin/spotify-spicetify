@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+"""Launch the local Spotify client with Spicetify, without automatic updates."""
+import configparser
+import fcntl
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+home = Path.home()
+install = home / '.local/share/spotify-launcher/install/usr/share/spotify'
+apps = install / 'Apps'
+config_path = home / '.config/spicetify/config-xpui.ini'
+spicetify = home / '.spicetify/spicetify'
+
+
+def patched():
+    try:
+        state = json.loads((home / '.local/share/spotify-launcher/state.json').read_text())
+        version = state['version'].split(':', 1)[-1]
+        config = configparser.ConfigParser(interpolation=None)
+        config.read(config_path)
+        return (config.get('Backup', 'version', fallback='') == version
+                and not (apps / 'xpui.spa').exists()
+                and (apps / 'xpui/helper/spicetifyWrapper.js').is_file()
+                and 'helper/spicetifyWrapper.js' in (apps / 'xpui/index.html').read_text()
+                and (apps / 'xpui/extensions/glassy-transparent-backdrop.js').is_file())
+    except (OSError, ValueError, KeyError, configparser.Error):
+        return False
+
+
+def main():
+    if sys.argv[1:] == ['--check']:
+        print('Spicetify is applied' if patched() else 'Spicetify needs repair')
+        return 0 if patched() else 1
+    if not spicetify.is_file():
+        raise RuntimeError('Spicetify is missing; Spotify was not launched unpatched.')
+    runtime = Path(os.environ.get('XDG_RUNTIME_DIR', str(home / '.cache')))
+    with (runtime / 'spotify-spicetify.lock').open('w') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        subprocess.run(['/usr/bin/spotify-launcher', '--skip-update', '--no-exec'], check=True)
+        if not patched():
+            running = subprocess.run(['pgrep', '-x', 'spotify'], capture_output=True).returncode == 0
+            if running:
+                subprocess.run(['gdbus', 'call', '--session', '--dest', 'org.mpris.MediaPlayer2.spotify',
+                                '--object-path', '/org/mpris/MediaPlayer2', '--method',
+                                'org.mpris.MediaPlayer2.Quit'], check=True, stdout=subprocess.DEVNULL)
+                for _ in range(50):
+                    if subprocess.run(['pgrep', '-x', 'spotify'], capture_output=True).returncode != 0:
+                        break
+                    time.sleep(0.1)
+                else:
+                    raise RuntimeError('Spotify has not closed; customization was not changed.')
+            config = configparser.ConfigParser(interpolation=None)
+            config.read(config_path)
+            state = json.loads((home / '.local/share/spotify-launcher/state.json').read_text())
+            version = state['version'].split(':', 1)[-1]
+            commands = ['backup', 'apply'] if (apps / 'xpui.spa').exists() or config.get('Backup', 'version', fallback='') != version else ['apply']
+            subprocess.run([str(spicetify), '-q', *commands], check=True)
+            if not patched():
+                raise RuntimeError('Spicetify repair failed; refusing to open unpatched Spotify.')
+    os.execv('/usr/bin/spotify-launcher', ['spotify-launcher', '--skip-update', *sys.argv[1:]])
+
+
+if __name__ == '__main__':
+    try:
+        raise SystemExit(main())
+    except (OSError, subprocess.CalledProcessError, RuntimeError, ValueError, KeyError, configparser.Error) as error:
+        message = str(error)
+        print('Spotify customization:', message, file=sys.stderr)
+        subprocess.run(['notify-send', 'Spotify customization needs attention', message], check=False)
+        raise SystemExit(1)

@@ -1,0 +1,159 @@
+/* Hide only the Tabliss extension indicator */
+#identity-box.extensionPage:has(label[value="Extension (Tabliss)"]) {
+    display: none !important;
+}
+/* 1. Rounded URL bar */
+#urlbar-background {
+    border-radius: 14px !important;
+}
+
+/* 2. Rounded tabs */
+.tabbrowser-tab .tab-background {
+    border-radius: 10px !important;
+    margin-block: 3px !important;
+}
+
+/* 3. Hide tab close button until hover */
+.tabbrowser-tab:not(:hover) .tab-close-button {
+    display: none !important;
+}
+
+/* 4. Make inactive tabs slightly transparent */
+.tabbrowser-tab:not([selected]) {
+    opacity: 0.65 !important;
+}
+
+/* 5. Hide "Firefox View" button */
+#firefox-view-button {
+    display: none !important;
+}
+
+/* 6. Hide sidebar button if you don't use it */
+#sidebar-button {
+    display: none !important;
+}
+
+
+/* 8. Cleaner URL bar suggestions */
+.urlbarView-row {
+    border-radius: 8px !important;
+    margin: 2px 6px !important;
+}
+
+/* 9. Remove URL bar border/shadow */
+#urlbar-background {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 10. Compact toolbar */
+#nav-bar {
+    padding-block: 2px !important;
+}
+
+
+/* Search-engine pill: dark in ALL states */
+.searchmode-switcher {
+    --button-background-color-muted: #2a2a32 !important;
+    --button-background-color-muted-hover: #34343f !important;
+    --button-background-color-muted-active: #3d3d49 !important;
+    --button-background-color-muted-selected: #3d3d49 !important;
+}
+
+
+
+/* BEGIN KNIGHT LIQUID GLASS */
+@-moz-document url("chrome://browser/content/browser.xhtml") {
+  :root {
+    --glass-fill: rgba(23, 25, 30, .46);
+    --glass-line: rgba(255, 255, 255, .18);
+    --toolbar-bgcolor: transparent !important;
+    --toolbar-color: #f1f3f7 !important;
+    --lwt-text-color: #f1f3f7 !important;
+    --lwt-accent-color: transparent !important;
+    --lwt-accent-color-inactive: transparent !important;
+    --tabpanel-background-color: transparent !important;
+    --tab-selected-bgcolor: rgba(255,255,255,.14) !important;
+    --toolbar-field-background-color: rgba(255,255,255,.07) !important;
+    --toolbar-field-color: #f1f3f7 !important;
+    --toolbar-field-focus-color: #fff !important;
+    --toolbar-field-focus-background-color: rgba(30,33,40,.94) !important;
+    --chrome-content-separator-color: rgba(255,255,255,.10) !important;
+    background: transparent !important;
+  }
+  #main-window, #browser, #appcontent, #tabbrowser-tabbox,
+  #tabbrowser-tabpanels, .browserContainer, .browserStack {
+    background-color: transparent !important;
+  }
+  #navigator-toolbox {
+    background: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.025) 38%, rgba(10,12,18,.20)), var(--glass-fill) !important;
+    background-image: linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.025) 38%, rgba(10,12,18,.20)) !important;
+    border-bottom: 1px solid var(--glass-line) !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.16), 0 5px 22px rgba(0,0,0,.12) !important;
+  }
+  #TabsToolbar, #nav-bar, #PersonalToolbar, #titlebar {
+    background: transparent !important;
+    color: #f1f3f7 !important;
+    box-shadow: none !important;
+  }
+  :root #urlbar-background, :root #searchbar {
+    background: linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.025)) !important;
+    border: 1px solid rgba(255,255,255,.15) !important;
+    border-radius: 14px !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.12), 0 3px 12px rgba(0,0,0,.10) !important;
+  }
+  :root #urlbar[breakout-extend] > #urlbar-background,
+  :root #urlbar[open] > #urlbar-background {
+    background: rgba(27,30,37,.96) !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.16), 0 12px 32px rgba(0,0,0,.32) !important;
+  }
+  #urlbar-input { color: #f1f3f7 !important; }
+  .tabbrowser-tab[selected] .tab-background {
+    background: linear-gradient(160deg,rgba(255,255,255,.20),rgba(255,255,255,.055)) !important;
+    border: 1px solid rgba(255,255,255,.19) !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.22), 0 3px 12px rgba(0,0,0,.13) !important;
+  }
+  .tabbrowser-tab:not([selected]):hover .tab-background,
+  toolbarbutton:hover > .toolbarbutton-icon,
+  toolbarbutton:hover > .toolbarbutton-badge-stack {
+    background-color: rgba(255,255,255,.10) !important;
+    border-radius: 10px !important;
+  }
+  #sidebar-box, #sidebar-main {
+    background: rgba(23,25,30,.52) !important;
+    color: #f1f3f7 !important;
+    border-color: rgba(255,255,255,.12) !important;
+  }
+  panel, menupopup {
+    --panel-background: rgba(28,31,38,.96) !important;
+    --panel-color: #f1f3f7 !important;
+    --panel-border-color: rgba(255,255,255,.18) !important;
+    --panel-border-radius: 14px !important;
+  }
+}
+/* END KNIGHT LIQUID GLASS */
+
+/* BEGIN KNIGHT HEADER-ONLY THEME */
+@-moz-document url("chrome://browser/content/browser.xhtml") {
+  /* Firefox can paint the theme on the whole browser body; confine it to chrome. */
+  :root body {
+    background-image: none !important;
+  }
+  #navigator-toolbox {
+    background-image: var(--toolbox-background-image) !important;
+    background-repeat: var(--toolbox-background-repeat) !important;
+    background-position: var(--toolbox-background-position) !important;
+    background-size: var(--toolbox-background-size) !important;
+  }
+}
+/* END KNIGHT HEADER-ONLY THEME */
+
+/* BEGIN KNIGHT TRANSPARENT CONTENT SURFACE */
+@-moz-document url("chrome://browser/content/browser.xhtml") {
+  :root body, #browser, #appcontent, #tabbrowser-tabbox,
+  #tabbrowser-tabpanels, .browserContainer, .browserStack,
+  browser[type="content"] {
+    background-color: transparent !important;
+  }
+}
+/* END KNIGHT TRANSPARENT CONTENT SURFACE */

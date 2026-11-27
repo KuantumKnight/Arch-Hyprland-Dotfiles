@@ -1,0 +1,49 @@
+
+/* BEGIN KNIGHT LIQUID GLASS */
+@-moz-document url("about:home"), url("about:newtab"), url("about:blank") {
+  :root, html, body, #root {
+    background: transparent !important;
+    --newtab-background-color: transparent !important;
+    --newtab-background-color-secondary: rgba(25,28,35,.58) !important;
+  }
+  .search-wrapper .search-handoff-button, .top-site-outer .tile {
+    background: rgba(25,28,35,.52) !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.16) !important;
+  }
+}
+/* END KNIGHT LIQUID GLASS */
+
+/* BEGIN KNIGHT TRANSPARENT TABLISS */
+@-moz-document url-prefix("moz-extension://TABLISS_UUID/"), url("about:newtab"), url("about:home") {
+  html, html.theme-light, html.theme-dark, body, #root,
+  .Dashboard, .Dashboard.light, .Dashboard.dark {
+    background: transparent !important;
+    background-image: none !important;
+  }
+  /* Only the wallpaper/provider layer: leave widgets and settings available. */
+  .Dashboard .Background {
+    display: none !important;
+  }
+  .Widgets {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .8) !important;
+  }
+}
+/* END KNIGHT TRANSPARENT TABLISS */
+
+/* BEGIN KNIGHT NEW TAB SUBTLE TINT */
+@-moz-document url-prefix("moz-extension://TABLISS_UUID/"), url("about:newtab"), url("about:home") {
+  html, html.theme-light, html.theme-dark {
+    background-color: rgba(0, 0, 0, .32) !important;
+  }
+}
+/* END KNIGHT NEW TAB SUBTLE TINT */
+
+/* BEGIN KNIGHT DARK READER ROOT GLASS */
+@-moz-document url-prefix("http://"), url-prefix("https://") {
+  html[data-knight-glass-id] {
+    background-color: var(--knight-glass-root-color, Canvas) !important;
+  }
+}
+/* END KNIGHT DARK READER ROOT GLASS */

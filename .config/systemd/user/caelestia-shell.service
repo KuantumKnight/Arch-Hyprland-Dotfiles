@@ -7,6 +7,7 @@ StartLimitBurst=3
 
 [Service]
 Environment=GDK_DPI_SCALE=0.8
+Environment=PATH=%h/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
 Type=exec
 ExecStart=/usr/bin/systemd-inhibit --what=handle-power-key --mode=block --who=Hyprland --why=Caelestia-session-menu /usr/bin/quickshell --config caelestia --no-duplicate
 Restart=on-failure
